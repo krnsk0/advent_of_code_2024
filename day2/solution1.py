@@ -1,3 +1,6 @@
+# https://adventofcode.com/2024/day/2
+
+
 useRealInput = True
 
 with open('input_1_real.txt' if useRealInput else 'input_0_test.txt', 'r') as file:
