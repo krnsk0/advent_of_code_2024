@@ -6,9 +6,24 @@ def getInput(useRealInput):
         input = file.read()
     return input
 
+def getStr(input):
+    out = ''
+    id = 0
+    for i, c in enumerate(input):
+        n = int(c)
+        if i % 2 == 0:
+            out += str(id) * n
+            id += 1
+        else:
+            out += '.' * n
+    return out
 
 def solve(input):
-    pass
+    print(getStr(input))
+    i = 0
+    while i < len(input):
+        break
 
-useRealInput = True
+
+useRealInput = False
 print("\npart 1 solution:", solve(getInput(useRealInput)))
