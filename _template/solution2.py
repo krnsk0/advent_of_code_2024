@@ -1,5 +1,4 @@
 # https://adventofcode.com/2024/day/0
-from collections import defaultdict
 
 def getInput(useRealInput):
     with open('input_1_real.txt' if useRealInput else 'input_0_test.txt', 'r') as file:
