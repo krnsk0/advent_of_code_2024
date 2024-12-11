@@ -35,6 +35,39 @@ def getNeighbors(x, y, width, height):
     return neighbors
 
 
+def walk(matrix, startX, startY):
+    print("")
+    print("Walk started from 0 at", (startX, startY))
+    width = len(matrix[0])
+    height = len(matrix)
+
+    debug = [['.' for _ in range(width)] for _ in range(height)]
+
+    queue = deque()
+    seen = set()
+    queue.append((startX, startY))
+    nineCount = 0
+
+    while queue:
+        x, y = queue.popleft()
+        if (x, y) in seen:
+            continue
+        seen.add((x, y))
+        elevation = matrix[y][x]
+        debug[y][x] = elevation
+
+
+        if elevation == 9:
+            nineCount += 1
+
+        neighbors = getNeighbors(x, y, width, height)
+        for nx, ny in neighbors:
+            if matrix[ny][nx] == elevation + 1:
+                queue.append((nx, ny))
+    print('found nines:', nineCount)
+    return nineCount
+
+
 def solve(input):
     matrix = getMatrix(input)
     print("input")
@@ -43,37 +76,13 @@ def solve(input):
     width = len(matrix[0])
     height = len(matrix)
 
-
-    seen = set()
-    queue = deque()
     count = 0
 
     for startY in range(height):
         for startX in range(width):
             if matrix[startY][startX] == 0:
-                print("")
-                print("Starting from 0 at", (startX, startY))
-                nineCount = 0
-
-                queue.append((startX, startY))
-
-                while queue:
-                    x, y = queue.popleft()
-                    seen.add((x, y))
-                    elevation = matrix[y][x]
-
-                    if elevation == 9:
-                        nineCount += 1
-
-                    neighbors = getNeighbors(x, y, width, height)
-                    for nx, ny in neighbors:
-                        if (nx, ny) in seen: continue
-                        if matrix[ny][nx] == elevation + 1:
-                            queue.append((nx, ny))
-
-                print(f"found {nineCount} nines")
-                count += nineCount
+                count += walk(matrix, startX, startY)
     return count
 
-useRealInput = False
+useRealInput = True
 print("\npart 1 solution:", solve(getInput(useRealInput)))
