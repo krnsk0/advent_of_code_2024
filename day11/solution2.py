@@ -3,6 +3,8 @@ import time
 import math
 from collections import defaultdict
 
+from _helpers import get_input
+
 
 def getInput(useRealInput):
     with open('input_1_real.txt' if useRealInput else 'input_0_test.txt', 'r') as file:
@@ -56,8 +58,7 @@ def solve(input):
     return totalCount
 
 start_time = time.time()
-useRealInput = True
-solution = solve(getInput(useRealInput))
+solution = solve(get_input(use_real=True))
 print("\npart 2 solution:", solution)
 end_time = time.time()
 print(f"took {end_time - start_time}")

@@ -1,5 +1,8 @@
 # https://adventofcode.com/2024/day/5
 
+from _helpers import get_input
+
+
 def getInput(useRealInput):
     with open('input_1_real.txt' if useRealInput else 'input_0_test.txt', 'r') as file:
         input = file.read()
@@ -37,7 +40,7 @@ def getAnswer(updates, rules):
     return total
 
 
-useRealInput = True
-rules, updates = parseInput(getInput(useRealInput))
+
+rules, updates = parseInput(get_input(use_real=True))
 print('part 1 answer', getAnswer(updates, rules))
 

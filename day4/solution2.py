@@ -1,6 +1,9 @@
 # https://adventofcode.com/2024/day/4
 
 
+from _helpers import get_input
+
+
 def getInput(useRealInput):
     with open('input_1_real.txt' if useRealInput else 'input_0_test.txt', 'r') as file:
         input = file.read()
@@ -35,5 +38,4 @@ def getAnswer(input):
     return count
 
 
-useRealInput = True
-print(getAnswer(getInput(useRealInput)))
+print(getAnswer(get_input(use_real=True)))

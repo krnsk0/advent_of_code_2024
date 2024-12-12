@@ -4,5 +4,5 @@ from _helpers.get_input import get_input
 def solve(input):
     pass
 
-useRealInput = True
-print("\npart 2 solution:", solve(get_input(useRealInput)))
+
+print("\npart 2 solution:", solve(get_input(use_real=False)))

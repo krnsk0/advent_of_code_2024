@@ -2,11 +2,9 @@
 import time
 import math
 
+from _helpers import get_input
 
-def getInput(useRealInput):
-    with open('input_1_real.txt' if useRealInput else 'input_0_test.txt', 'r') as file:
-        input = file.read()
-    return input
+
 
 def digits(number):
     if number == 0:
@@ -40,6 +38,6 @@ def solve(input):
 
 start_time = time.time()
 useRealInput = True
-print("\npart 1 solution:", solve(getInput(useRealInput)))
+print("\npart 1 solution:", solve(get_input(use_real=True)))
 end_time = time.time()
 print(f"took {end_time - start_time}")

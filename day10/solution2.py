@@ -1,10 +1,8 @@
 # https://adventofcode.com/2024/day/
 from collections import defaultdict, deque
 
-def getInput(useRealInput):
-    with open('input_1_real.txt' if useRealInput else 'input_0_test.txt', 'r') as file:
-        input = file.read()
-    return input
+from _helpers import get_input
+
 
 def getMatrix(input):
     return [[int(c) if c != '.' else '.' for c in row] for row in input.split('\n')]
@@ -81,5 +79,4 @@ def solve(input):
                 count += walk(matrix, startX, startY)
     return count
 
-useRealInput = True
-print("\npart 1 solution:", solve(getInput(useRealInput)))
+print("\npart 1 solution:", solve(get_input(use_real=True)))

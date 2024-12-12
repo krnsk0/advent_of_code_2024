@@ -1,10 +1,7 @@
 # https://adventofcode.com/2024/day/4
 import re
+from _helpers import get_input
 
-def getInput(useRealInput):
-    with open('input_1_real.txt' if useRealInput else 'input_0_test.txt', 'r') as file:
-        input = file.read()
-    return input
 
 def countXmasInStrs(strs):
     count = 0
@@ -80,6 +77,6 @@ def getAll(input):
     ]
 
 
-useRealData = True
-count = countXmasInStrs(getAll(getInput(useRealData)))
+
+count = countXmasInStrs(getAll(get_input(use_real=True)))
 print('part 1 solution', count)

@@ -1,5 +1,8 @@
 # https://adventofcode.com/2024/day/5
 
+from _helpers import get_input
+
+
 def getInput(useRealInput):
     with open('input_1_real.txt' if useRealInput else 'input_0_test.txt', 'r') as file:
         input = file.read()
@@ -87,6 +90,5 @@ def solve(input):
     return positions
 
 
-useRealInput = True
 # not working yet...
-print("\npart 2 solution", solve(getInput(useRealInput)))
+print("\npart 2 solution", solve(get_input(use_real=True)))
