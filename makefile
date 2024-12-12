@@ -9,4 +9,4 @@ problem ?= 1
 # Usage: make run day=12 problem=1
 run:
 	@echo "Running solution for Day $(day), Problem $(problem)..."
-	@nodemon --exec "PYTHONPATH=. DAY=${day} python3 day$(day)/solution$(problem).py"
+	@nodemon -r . --ext py,txt --exec "PYTHONPATH=. DAY=${day} python3 day$(day)/solution$(problem).py"
