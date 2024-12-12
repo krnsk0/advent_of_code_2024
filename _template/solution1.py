@@ -1,4 +1,4 @@
-# https://adventofcode.com/2024/day/12
+# https://adventofcode.com/2024/day/X
 from _helpers import get_input
 
 def solve(input):

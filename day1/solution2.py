@@ -5,4 +5,4 @@ def solve(input):
     pass
 
 use_real = False
-print("\npart 1 solution:", solve(get_input(use_real=False)))
+print("\npart 2 solution:", solve(get_input(use_real=False)))
