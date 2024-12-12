@@ -4,7 +4,7 @@ from collections import defaultdict
 from _helpers import get_input
 
 def getInput(useRealInput):
-    with open('input_1_real.txt' if useRealInput else 'input_0_test.txt', 'r') as file:
+    with open('input_1.txt' if useRealInput else 'input_0.txt', 'r') as file:
         input = file.read()
     return input
 

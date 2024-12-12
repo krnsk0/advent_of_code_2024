@@ -18,8 +18,8 @@ create:
 	@mkdir -p day$(day)  # Create a directory for the new day
 	@cp _template/solution1.py day$(day)/solution1.py  # Copy the template Python file
 	@cp _template/solution2.py day$(day)/solution2.py  # Copy the template Python file
-	@cp _template/input_1_real.txt day$(day)/input_1_real.txt  # Copy the template input files
-	@cp _template/input_0_test.txt day$(day)/input_0_test.txt
+	@cp _template/input_1.txt day$(day)/input_1.txt  # Copy the template input files
+	@cp _template/input_0.txt day$(day)/input_0.txt
 
 	# Modify the Python files to update the AOC day in the comments
 	@sed -i '' 's/day\/X/day\/$(day)/g' day$(day)/solution1.py  # Update solution1.py comment
