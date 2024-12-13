@@ -9,6 +9,6 @@ def get_input(use_real=False):
     """
     filename = "input_1.txt" if use_real else "input_0.txt"
     file_path = os.path.join("day" + os.getenv("DAY"), filename)
-    print(f"loading {file_path}...")
+    print(f"loading {file_path}...\n")
     with open(file_path, "r") as file:
-        return file.read()
+        return file.read().rstrip()

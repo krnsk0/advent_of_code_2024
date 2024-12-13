@@ -81,10 +81,11 @@ def search_from_cell(matrix, x, y, global_seen):
             elif matrix[ny][nx] == search_letter:
                 queue.append((nx, ny))
 
-    # print_matrix(copy, axes=True)
-    # print("FOR LETTER", search_letter)
-    # print("TOTAL AREA", area)
-    # print("TOTAL SIDES", sideCount)
+    print_matrix(copy, axes=True)
+    print("FOR LETTER", search_letter)
+    print("TOTAL AREA", area)
+    print("TOTAL SIDES", sideCount)
+    print("")
     return area * sideCount
 
 
