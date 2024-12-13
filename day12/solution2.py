@@ -1,51 +1,91 @@
 # https://adventofcode.com/2024/day/12
+from collections import deque
 from _helpers import copy_matrix, get_input, get_matrix, get_neighbors, print_matrix
+
+
+def get_side_label(x, y, nx, ny):
+    if x == nx:
+        if ny < y:
+            return f"U"
+        else:
+            return f"D"
+    if y == ny:
+        if nx < x:
+            return f"L"
+        else:
+            return f"R"
+
+
+assert get_side_label(1, 1, 1, 0) == "U"
+assert get_side_label(1, 1, 1, 2) == "D"
+assert get_side_label(1, 1, 0, 1) == "L"
+assert get_side_label(1, 1, 2, 1) == "R"
 
 
 def search_from_cell(matrix, x, y, global_seen):
     height = len(matrix)
     width = len(matrix[0])
     search_letter = matrix[y][x]
-    stack = [(x, y)]
+    queue = deque()
+    queue.append((x, y))
     area = 0
-    perimeter = 0
     seen = set()
+    copy = copy_matrix(matrix)
 
-    while stack:
-        cx, cy = stack.pop()
+    sides = {
+        "U": set(),
+        "D": set(),
+        "L": set(),
+        "R": set(),
+    }
+    sideCount = 0
+
+    while queue:
+        cx, cy = queue.popleft()
         if (cx, cy) in seen:
             continue
         seen.add((cx, cy))
         global_seen.add((cx, cy))
         neighbors = get_neighbors(cx, cy)
         area += 1
-        thisPerimeter = 0
 
         # DEBUG
-        copy = copy_matrix(matrix)
         copy[cy][cx] = "."
-        print("walking", cx, cy)
-        print("neighbors", neighbors)
-        print_matrix(copy)
 
         for nx, ny in neighbors:
-            if nx < 0 or nx >= width or ny < 0 or ny >= height:
-                print("neighbor", (nx, ny), "is out of bounds; incrementing perimeter")
-                thisPerimeter += 1
-            elif matrix[ny][nx] != search_letter:
-                print("neighbor", (nx, ny), "is another letter; incrementing perimeter")
-                thisPerimeter += 1
+            side_label = get_side_label(cx, cy, nx, ny)
+
+            # found a side
+            if (
+                nx < 0
+                or nx >= width
+                or ny < 0
+                or ny >= height
+                or matrix[ny][nx] != search_letter
+            ):
+                sideSet = sides[side_label]
+                sideSet.add((nx, ny))
+                if side_label in ("U", "D"):
+                    if (nx + 1, ny) not in sideSet and (
+                        nx - 1,
+                        ny,
+                    ) not in sideSet:
+                        sideCount += 1
+                elif side_label in ("R", "L"):
+                    if (nx, ny - 1) not in sideSet and (
+                        nx,
+                        ny + 1,
+                    ) not in sideSet:
+                        sideCount += 1
+
             elif matrix[ny][nx] == search_letter:
-                stack.append((nx, ny))
-        perimeter += thisPerimeter
+                queue.append((nx, ny))
 
-        # DEBUG
-        print("perimeter of this cell", thisPerimeter)
-        print("")
-
-    print("TOTAL AREA", area)
-    print("TOTAL PERIMETER", perimeter)
-    return area * perimeter
+    # print_matrix(copy, axes=True)
+    # print("FOR LETTER", search_letter)
+    # print("TOTAL AREA", area)
+    # print("TOTAL SIDES", sideCount)
+    return area * sideCount
 
 
 def solve(input):
@@ -54,12 +94,15 @@ def solve(input):
     total_value = 0
     width = len(matrix[0])
     height = len(matrix)
+
     for y in range(height):
         for x in range(width):
             if (x, y) not in global_seen:
                 value = search_from_cell(matrix, x, y, global_seen)
                 total_value += value
+
     return total_value
 
 
+# not yet working
 print("\npart 1 solution:", solve(get_input(use_real=False)))
