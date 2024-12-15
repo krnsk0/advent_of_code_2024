@@ -20,9 +20,6 @@ create:
 	@cp _template/solution2.py day$(day)/solution2.py  # Copy the template Python file
 	@cp _template/input_1.txt day$(day)/input_1.txt  # Copy the template input files
 	@cp _template/input_0.txt day$(day)/input_0.txt
-
-	# Modify the Python files to update the AOC day in the comments
 	@sed -i '' 's/day\/X/day\/$(day)/g' day$(day)/solution1.py  # Update solution1.py comment
 	@sed -i '' 's/day\/X/day\/$(day)/g' day$(day)/solution2.py  # Update solution2.py comment
-
 	@echo "day $(day) folder created successfully"
