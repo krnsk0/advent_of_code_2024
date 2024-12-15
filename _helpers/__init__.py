@@ -5,6 +5,7 @@ from .get_matrix import get_matrix
 from .get_neighbors import get_neighbors
 from .print_matrix import print_matrix
 from .copy_matrix import copy_matrix
+from .make_matrix import make_matrix
 
 __all__ = [
     "get_input",
@@ -13,4 +14,5 @@ __all__ = [
     "print_matrix",
     "Matrix",
     "copy_matrix",
+    "make_matrix",
 ]
