@@ -11,11 +11,14 @@ def parse_input(input):
         for x in range(len(matrix[0])):
             c = matrix[y][x]
             if c in (".", "#"):
-                row.append(c + c)
+                row.append(c)
+                row.append(c)
             elif c == "@":
-                row.append("@.")
+                row.append("@")
+                row.append(".")
             elif c == "O":
-                row.append("[]")
+                row.append("[")
+                row.append("]")
 
     moves = list(moveStr.replace("\n", ""))
     return (largerMatrix, moves)
@@ -42,11 +45,25 @@ def get_next(x, y, dir):
         return (x - 1, y)
 
 
+def move(matrix, dir, x, y):
+    print(f"moved called for {dir}, {(x, y)}, chr {matrix[y][x]}")
+    nx, ny = get_next(x, y, dir)
+
+    # left/right moves are easy
+    if dir in ("<", ">"):
+        if matrix[ny][nx] in ("[", "]"):
+            move(matrix, dir, nx, ny)
+    if matrix[ny][nx] == ".":
+        matrix[y][x], matrix[ny][nx] = matrix[ny][nx], matrix[y][x]
+
+
 def solve(input):
     matrix, moves = parse_input(input)
     print_matrix(matrix)
     print("")
     print("".join(moves))
+
+    move(matrix, "<", *find_robot(matrix))
 
     print("")
     print_matrix(matrix)
