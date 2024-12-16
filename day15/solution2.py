@@ -103,30 +103,16 @@ def can_set_move(matrix, s, dir) -> bool:
     """
     # print("can_set_move in dir", dir)
 
-    terminal_boxes = set()
     # bx is always left bracket
     for bx, by in s:
         left_next = get_next(bx, by, dir)
         right_next = get_next(bx + 1, by, dir)
-        if matrix[left_next[1]][left_next[0]] not in ("[", "]") and matrix[
-            right_next[1]
-        ][right_next[0]] not in ("[", "]"):
-            terminal_boxes.add((bx, by))
-
-    can_move = True
-
-    # search for blockers in front of any box
-    # print("terminal_boxes", terminal_boxes)
-    for bx, by in terminal_boxes:
-        left_next = get_next(bx, by, dir)
-        right_next = get_next(bx + 1, by, dir)
-
         if (
-            matrix[left_next[1]][left_next[0]] != "."
-            or matrix[right_next[1]][right_next[0]] != "."
+            matrix[left_next[1]][left_next[0]] == "#"
+            or matrix[right_next[1]][right_next[0]] == "#"
         ):
-            can_move = False
-    return can_move
+            return False
+    return True
 
 
 def move_box_set(matrix, s, dir):
@@ -196,11 +182,9 @@ def solve(input_str):
 
     for i, dir in enumerate(moves):
         move(matrix, dir, *find_robot(matrix))
-        if i > 1651:
-            os.system("clear")
-            print(f"\n************ Move {dir}; {i}:")
-            print_matrix(matrix)
-            input("press any key")
+        os.system("clear")
+        print(f"\n************ Move {dir}; {i}:")
+        print_matrix(matrix)
 
     print("\nfinal")
     print_matrix(matrix)
