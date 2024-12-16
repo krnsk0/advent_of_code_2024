@@ -1,5 +1,16 @@
 # https://adventofcode.com/2024/day/15
-from _helpers import get_input, get_matrix, print_matrix
+from _helpers import get_input, get_matrix
+import os
+
+HIGHLIGHT = "\033[92m\033[1m"
+ENDC = "\033[0m"
+
+
+def print_matrix(matrix):
+    for i, row in enumerate(matrix):
+        print(
+            "".join(str(n) if n != "@" else f"{HIGHLIGHT}{str(n)}{ENDC}" for n in row)
+        )
 
 
 def parse_input(input):
@@ -45,30 +56,156 @@ def get_next(x, y, dir):
         return (x - 1, y)
 
 
+def get_left_bracket(matrix, x, y):
+    if matrix[y][x] == "]":
+        return (x - 1, y)
+    if matrix[y][x] == "[":
+        return (x, y)
+
+
+def get_right_bracket(matrix, x, y):
+    if matrix[y][x] == "]":
+        return (x, y)
+    if matrix[y][x] == "[":
+        return (x + 1, y)
+
+
+def get_box_set(matrix, x, y, dir):
+    # print(f"get_box_set {(x, y)}, dir {dir}")
+    # only push left brackets
+    s = set()
+    left = get_left_bracket(matrix, x, y)
+    right = get_right_bracket(matrix, x, y)
+
+    # add self
+    s.add(left)
+
+    # get set above left bracket
+    nextLeft = get_next(*left, dir)
+    if matrix[nextLeft[1]][nextLeft[0]] in ("[", "]"):
+        leftBracketBoxes = get_box_set(matrix, *nextLeft, dir)
+        for box in leftBracketBoxes:
+            s.add(box)
+
+    # get set above right bracket
+    nextRight = get_next(*right, dir)
+    if matrix[nextRight[1]][nextRight[0]] in ("[", "]"):
+        leftBracketBoxes = get_box_set(matrix, *nextRight, dir)
+        for box in leftBracketBoxes:
+            s.add(box)
+    return s
+
+
+def can_set_move(matrix, s, dir) -> bool:
+    """
+    given a set of boxes, find only those boxes in the set with no boxes
+    in front of them, the "terminal" boxes in the direction we are moving
+    """
+    # print("can_set_move in dir", dir)
+
+    terminal_boxes = set()
+    # bx is always left bracket
+    for bx, by in s:
+        left_next = get_next(bx, by, dir)
+        right_next = get_next(bx + 1, by, dir)
+        if matrix[left_next[1]][left_next[0]] not in ("[", "]") and matrix[
+            right_next[1]
+        ][right_next[0]] not in ("[", "]"):
+            terminal_boxes.add((bx, by))
+
+    can_move = True
+
+    # search for blockers in front of any box
+    # print("terminal_boxes", terminal_boxes)
+    for bx, by in terminal_boxes:
+        left_next = get_next(bx, by, dir)
+        right_next = get_next(bx + 1, by, dir)
+
+        if (
+            matrix[left_next[1]][left_next[0]] != "."
+            or matrix[right_next[1]][right_next[0]] != "."
+        ):
+            can_move = False
+    return can_move
+
+
+def move_box_set(matrix, s, dir):
+    # print(f"move_box_set called in dir {dir} with s", s)
+    # first need to sort the set by y
+    asc = sorted(list(s), key=lambda box: box[1])
+    if dir == "v":
+        asc = reversed(asc)
+
+    dy = -1 if dir == "^" else 1
+    # bx is always left bracket
+    for bx, by in asc:
+        matrix[by][bx] = "."
+        matrix[by][bx + 1] = "."
+        matrix[by + dy][bx] = "["
+        matrix[by + dy][bx + 1] = "]"
+
+
+def move_box_up_down(matrix, dir, x, y):
+    # print(f"move_box_up_down {(x, y)}, dir {dir}, char {matrix[y][x]}")
+    s = get_box_set(matrix, x, y, dir)
+    # print("boxes in set:", s)
+    can_move = can_set_move(matrix, s, dir)
+    if can_move:
+        move_box_set(matrix, s, dir)
+        # print("DEBUG AFTER MOVE")
+        # print_matrix(matrix)
+
+
 def move(matrix, dir, x, y):
-    print(f"moved called for {dir}, {(x, y)}, chr {matrix[y][x]}")
+    # print(f"moved called for {dir}, {(x, y)}, chr {matrix[y][x]}")
     nx, ny = get_next(x, y, dir)
 
-    # left/right moves are easy
+    # pushing for left/right moves is easy
     if dir in ("<", ">"):
         if matrix[ny][nx] in ("[", "]"):
             move(matrix, dir, nx, ny)
-    if matrix[ny][nx] == ".":
-        matrix[y][x], matrix[ny][nx] = matrix[ny][nx], matrix[y][x]
+
+    # pushing for up/down moves
+    if dir in ("^", "v"):
+        if matrix[ny][nx] in ("[", "]"):
+            move_box_up_down(matrix, dir, nx, ny)
+
+    # do the actual move for this char
+    cur = matrix[y][x]
+    if cur == "@" or dir in ("<", ">"):
+        # only check for next square free
+        if matrix[ny][nx] == ".":
+            matrix[y][x], matrix[ny][nx] = matrix[ny][nx], matrix[y][x]
 
 
-def solve(input):
-    matrix, moves = parse_input(input)
+def get_checksum(matrix):
+    total = 0
+    for y in range(len(matrix)):
+        for x in range(len(matrix[0])):
+            char = matrix[y][x]
+            if char == "[":
+                total += y * 100 + x
+
+    return total
+
+
+def solve(input_str):
+    matrix, moves = parse_input(input_str)
+    print("input", "".join(moves))
     print_matrix(matrix)
-    print("")
-    print("".join(moves))
 
-    move(matrix, "<", *find_robot(matrix))
+    for i, dir in enumerate(moves):
+        move(matrix, dir, *find_robot(matrix))
+        if i > 1651:
+            os.system("clear")
+            print(f"\n************ Move {dir}; {i}:")
+            print_matrix(matrix)
+            input("press any key")
 
-    print("")
+    print("\nfinal")
     print_matrix(matrix)
 
-    return 0
+    return get_checksum(matrix)
 
 
-print("\npart 1 solution:", solve(get_input(use_real=False)))
+print("\npart 2 solution:", solve(get_input(use_real=True)))
