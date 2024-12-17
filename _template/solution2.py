@@ -2,7 +2,7 @@
 from _helpers import get_input
 
 
-def solve(input):
+def solve(inputStr):
     pass
 
 
