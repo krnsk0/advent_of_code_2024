@@ -123,4 +123,5 @@ def solve(inputStr):
 
 
 # sample out is 4,6,3,5,6,3,5,2,1,0
+# real out is 1,5,3,0,2,5,2,5,3
 print("\npart 1 solution:", solve(get_input(use_real=True)))

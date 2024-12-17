@@ -45,7 +45,7 @@ def get_combo_operand(state, operand):
     return result
 
 
-VERBOSE = False
+VERBOSE = True
 
 
 def adv(state, operand):
@@ -119,16 +119,16 @@ def get_output_at_halt(state):
         # debug(state)
         # input("press any key")
 
-    # print("")
-    # print("HALTED")
-    # debug(state)
+    VERBOSE and print("")
+    VERBOSE and print("HALTED")
+    VERBOSE and debug(state)
     return state.output
 
 
 def solve(inputStr):
     # website said 1_999_999 is too low
     # website said 9_990_000 is too low
-    for i in range(9_990_000, 100_000_000_000):
+    for i in range(37283687):
         state = get_initial_state(inputStr)
         state.a = i
         if i % 10_000 == 0:
@@ -140,4 +140,4 @@ def solve(inputStr):
 
 
 # not working, brute force will take way too long here
-print("\npart 2 solution:", solve(get_input(use_real=True)))
+print("\npart 2 solution:", solve(get_input(use_real=False)))
