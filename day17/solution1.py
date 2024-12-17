@@ -25,6 +25,7 @@ def get_initial_state(input):
 def debug(state):
     print(f"A: {state.a}\nB: {state.b}\nC: {state.c}")
     print(f"Pointer: {state.pointer}")
+    print(f"Output: {state.output}")
 
 
 def get_combo_operand(state, operand):
@@ -39,12 +40,12 @@ def get_combo_operand(state, operand):
         result = state.c
     if operand == 7:
         raise "7 is not valid combo operator"
-    print("get_combo_operand", state.a, state.b, state.c, "returning", result)
+    # print("get_combo_operand", state.a, state.b, state.c, "returning", result)
     return result
 
 
 def adv(state, operand):
-    result = int(state.a / (2 ^ get_combo_operand(state, operand)))
+    result = int(state.a / (2 ** get_combo_operand(state, operand)))
     print("adv; result in A:", result)
     state.a = result
 
@@ -78,19 +79,19 @@ def bxc(state, operand):
 
 
 def out(state, operand):
-    result = get_combo_operand(state, operand) * 8
+    result = get_combo_operand(state, operand) % 8
     print("out; result in out", result)
     state.output.append(result)
 
 
 def bdv(state, operand):
-    result = int(state.a / (2 ^ get_combo_operand(state, operand)))
+    result = int(state.a / (2 ** get_combo_operand(state, operand)))
     print("bdv; result in B:", result)
     state.b = result
 
 
 def cdv(state, operand):
-    result = int(state.a / (2 ^ get_combo_operand(state, operand)))
+    result = int(state.a / (2 ** get_combo_operand(state, operand)))
     print("cdv; result in C:", result)
     state.c = result
 
@@ -105,18 +106,21 @@ def solve(inputStr):
     print("")
 
     while state.pointer < len(state.program):
+        print("")
         opcode = state.program[state.pointer]
         operand = state.program[state.pointer + 1]
         jumped = opcode_map[opcode](state, operand)
+
         if jumped is None:
             state.pointer += 2
+        debug(state)
         # input("press any key")
 
     print("")
     print("HALTED")
     debug(state)
-    print("Output:", state.output)
+    return ",".join([str(s) for s in state.output])
 
 
 # sample out is 4,6,3,5,6,3,5,2,1,0
-print("\npart 1 solution:", solve(get_input(use_real=False)))
+print("\npart 1 solution:", solve(get_input(use_real=True)))
