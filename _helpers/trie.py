@@ -1,3 +1,9 @@
+"""
+TODO: need some assertions on this helper!!
+
+"""
+
+
 class TrieNode:
     label: str = ""
     count: int = 0
@@ -34,8 +40,3 @@ class Trie:
             else:
                 cur = cur.children[c]
         return cur.count >= 0
-
-
-def make_trie(strings: list[str]):
-    trie = Trie(strings)
-    return trie
