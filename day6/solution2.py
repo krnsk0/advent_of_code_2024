@@ -1,94 +1,65 @@
 # https://adventofcode.com/2024/day/5
 
-from _helpers import get_input
+from _helpers import copy_matrix, get_input, get_matrix, get_neighbors, print_matrix
 
 
-def getInput(useRealInput):
-    with open('input_1.txt' if useRealInput else 'input_0.txt', 'r') as file:
-        input = file.read()
-    return input
-
-def printMatrix(matrix):
-    for row in matrix:
-        print(''.join(row))
-
-def getMatrix(input):
-    matrix = list(map(lambda x: list(x), input.split('\n')))
-    # matrix, width, height
-    return (matrix, len(matrix[0]), len(matrix))
-
-def initialize(matrix, width, height):
-    for y in range(height):
-        for x in range(width):
-            if matrix[y][x] == '^':
+def find_guard(matrix):
+    for y in range(len(matrix)):
+        for x in range(len(matrix[0])):
+            if matrix[y][x] == "^":
                 return (x, y)
 
-def getNextSquare(x, y, dir):
-    nx, ny = x, y
-    if dir == 0:
-        ny -= 1
-    elif dir == 1:
-        nx += 1
-    elif dir == 2:
-        ny += 1
-    else:
-        nx -= 1
-    return nx, ny
 
-def isObstacle(matrix, width, height, x, y):
-    if 0 <= x < width and 0 <= y < height:
-        return matrix[y][x] == '#' or matrix[y][x] == 'O'
-    else: return False
-
-def attemptEscape(matrix, width, height):
-    x, y = initialize(matrix, width, height)
-    initX, initY = x, y
+def attempt_escape(matrix):
+    x, y = find_guard(matrix)
     direction = 0
-    obstaclePositions = set()
-    pathPoints = set()
+    walked = set()
+    escape_path = set()
+    escape_path.add((x, y))
+    escape_path_ordered = []
+    while True:
+        if (x, y, direction) in walked:
+            return (False, escape_path_ordered)
+        walked.add((x, y, direction))
+        if (x, y) not in escape_path:
+            escape_path.add((x, y))
+            escape_path_ordered.append((x, y))
+        matrix[y][x] = "%"
+        nx, ny = get_neighbors(x, y)[direction]
+        if ny < 0 or ny >= len(matrix) or nx < 0 or nx >= len(matrix[0]):
+            return (True, escape_path_ordered)
+        if matrix[ny][nx] in ("#", "O"):
+            # print("\nhit obstacle at", ny, nx, "dir is", direction)
+            direction = (direction + 1) % 4
+            # print_matrix(matrix)
+            # print("new direction", direction)
+            nx, ny = get_neighbors(x, y)[direction]
+        x, y = nx, ny
 
 
-    while 0 <= x < width and 0 <= y < height:
-        if (x, y) != (initX, initY):
-            obstaclePositions.add((x, y))
-        if (x, y, direction) in pathPoints:
-            return (False, obstaclePositions)
-        pathPoints.add((x, y, direction))
-        nx, ny = getNextSquare(x, y, direction)
-        blocked = isObstacle(matrix, width, height, nx, ny)
-        if blocked:
-            direction += 1
-            if direction == 4: direction = 0
-        nx, ny = getNextSquare(x, y, direction)
-        matrix[y][x] = 'X'
-        x, y, = nx, ny
+def solve(inputStr):
+    matrix = get_matrix(inputStr)
+    print("INPUT:")
+    print_matrix(matrix)
+    print("")
 
-    # escaped, obstaclePositions
-    return (True, obstaclePositions)
+    copy = copy_matrix(matrix)
+    _, path = attempt_escape(copy)
 
-def copyMatrix(matrix):
-    out = []
-    for row in matrix:
-        out.append(row[:])
-    return out
+    obstacle_position_count = 0
 
-def solve(input):
-    matrix, width, height = getMatrix(input)
-    escaped, obstaclePositions = attemptEscape(copyMatrix(matrix), width, height)
-    positions = 0
+    for x, y in path:
+        copy = copy_matrix(matrix)
+        copy[y][x] = "O"
+        print("\nput obstacle at", (x, y))
+        escaped, _ = attempt_escape(copy)
+        print("escaped?", escaped)
+        if not escaped:
+            print_matrix(copy)
+            obstacle_position_count += 1
 
-    for oX, oY in obstaclePositions:
-        # print("\nputtting obstacle at", (oX, oY))
-        copy = copyMatrix(matrix)
-        copy[oY][oX] = 'O'
-        # print("attempting escape...")
-        escaped, _ = attemptEscape(copy, width, height)
-        # printMatrix(copy)
-        # print('escaped', escaped)
-        if escaped == False:
-            positions += 1
-    return positions
+    return obstacle_position_count
 
 
-# not working yet...
+# not working yet... 1519 is output?
 print("\npart 2 solution", solve(get_input(use_real=True)))
