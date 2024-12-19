@@ -119,9 +119,31 @@ def solve(inputStr):
     print("")
     print("HALTED")
     debug(state)
-    return ",".join([str(s) for s in state.output])
+    return state.output
 
 
 # sample out is 4,6,3,5,6,3,5,2,1,0
-# real out is 1,5,3,0,2,5,2,5,3
-print("\npart 1 solution:", solve(get_input(use_real=True)))
+# real out is   1,5,3,0,2,5,2,5,3
+solution = solve(get_input(use_real=True))
+print("\npart 1 solution:", solution)
+
+
+def decompiled(a):
+    out = []
+    a = a
+    b = 0
+    c = 0
+    while a != 0:
+        b = (a % 8) ^ 3
+        c = int(a / (2**b))
+        b = (b ^ c) ^ 3
+        a = int(a / (2**3))
+        out.append(b % 8)
+    return out
+
+
+decompiled_solution = decompiled(37283687)
+print(
+    "decompiled out:",
+)
+print("do solutions match?", solution == decompiled_solution)

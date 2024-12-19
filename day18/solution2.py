@@ -2,8 +2,10 @@
 from _helpers import get_input
 
 
-def solve(input):
+def solve(input, size):
+    print(f"size={size}")
     pass
 
 
-print("\npart 2 solution:", solve(get_input(use_real=False)))
+use_real = False
+print("\npart 2 solution:", solve(get_input(use_real), 70 if use_real else 6))
