@@ -6,6 +6,7 @@ from .get_neighbors import get_neighbors
 from .print_matrix import print_matrix
 from .copy_matrix import copy_matrix
 from .make_matrix import make_matrix
+from .make_trie import make_trie
 
 __all__ = [
     "get_input",
@@ -15,4 +16,5 @@ __all__ = [
     "Matrix",
     "copy_matrix",
     "make_matrix",
+    "make_trie",
 ]
