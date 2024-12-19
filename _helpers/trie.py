@@ -39,4 +39,4 @@ class Trie:
                 return False
             else:
                 cur = cur.children[c]
-        return cur.count >= 0
+        return cur.count > 0

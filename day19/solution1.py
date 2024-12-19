@@ -1,5 +1,6 @@
 # https://adventofcode.com/2024/day/19
-from _helpers import get_input, make_trie
+from _helpers import get_input
+from _helpers import Trie
 
 
 def parse(input):
@@ -17,17 +18,19 @@ def divide(design, i):
     return pre, post
 
 
-def is_design_possible(towels: list[str], design: str) -> bool:
+def is_design_possible(trie: Trie, design: str) -> bool:
     # print(f"{design} :: is_design_possible")
 
     for i in range(0, len(design)):
         pre, post = divide(design, i)
         # print(f"{design} :: division", pre, post)
+        if pre == "":
+            continue
         if post == "":
             return True
-        if pre in towels:
+        if trie.has(pre):
             # print(f"{design} :: {pre} is in towels")
-            result = is_design_possible(towels, post)
+            result = is_design_possible(trie, post)
             # print(f"{design} :: result of recursion {result}")
             if result:
                 return True
@@ -42,16 +45,18 @@ def solve(input):
 
     count = 0
 
-    trie = make_trie(towels)
+    trie = Trie(towels)
 
-    # for design in designs:
-    #     print("\nTRYING DESIGN", design)
-    #     possible = is_design_possible(towels, design)
-    #     print("possible?", possible)
-    #     if possible:
-    #         count += 1
+    for design in designs:
+        print("\nTRYING DESIGN", design)
+        possible = is_design_possible(trie, design)
+        print("possible?", possible)
+        if possible:
+            count += 1
 
     return count
 
 
-print("\npart 1 solution:", solve(get_input(use_real=False)))
+# runs forever on a single case for unknown reasons
+# solution is either 399 or 400?
+print("\npart 1 solution:", solve(get_input(use_real=True)))
