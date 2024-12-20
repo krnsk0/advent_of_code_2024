@@ -39,4 +39,5 @@ def solve(inputStr):
     return min(scores) + 1
 
 
+# 119412 is too high
 print("\npart 1 solution:", solve(get_input(use_real=True)))
